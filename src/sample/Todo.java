@@ -5,7 +5,7 @@ public class Todo {
 
     private String name;
     private int reminder;
-	
+
     public Todo () {
     }
 		
