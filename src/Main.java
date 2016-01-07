@@ -1,5 +1,3 @@
-package sample;
-
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,18 +9,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
-import java.util.List;
 
-
-// VIIDE!! kogu põhja algne viide: e
+// VIIDE!! kogu põhja algne viide: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
 
 public class Main
         extends Application {
@@ -30,20 +21,18 @@ public class Main
     private ListView<Todo> listView;
     private ObservableList<Todo> data;
     private TextField nametxt;
-    private ListView listView2;
+    private ListView<String> listView2;
+    private ObservableList<String> items;
 
     public static void main(String [] args) {
-
         Application.launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {   //Teen põhiakna
-
         primaryStage.setTitle("Todo App");
 
         // gridPane layout
-
         GridPane grid = new GridPane();   //sellega panen paika erinevad nupud ja tekstikastid
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(15); // horisonaalsete ridade vahel olev vahe
@@ -51,16 +40,14 @@ public class Main
         grid.setPadding(new Insets(25, 25, 25, 25)); //ümber gridi olev ruumi vahe
 
         // list view, listener and list data
-
-
         listView = new ListView<>();     //teen uue listview
         listView.getSelectionModel().selectedIndexProperty().addListener(
-                new ListSelectChangeListener());      //panen listeneri, et salvestada/säilitada valitud variant
-        data = getListData();
+                new ListSelectChangeListener());      //panen listeneri, et salvestada/säilitada valitud variant VIIDE: http://stackoverflow.com/questions/13264017/getting-selected-element-from-listview
+        data = FXCollections.observableList(new ArrayList<>());
         listView.setItems(data);
         grid.add(listView, 1, 1); // paigutan listview endal olevasse grid aknasse 1 ritta 1 veergu
 
-        // todo name label and text fld - in a hbox         //alanupud vertikaalselt ja horisonaalselt
+        // todo name label       //alanupud vertikaalselt ja horisonaalselt
 
         Label namelbl = new Label("Todo nimi:");
         nametxt = new TextField();
@@ -74,39 +61,19 @@ public class Main
 
         // Sellega saaks variandid panna üksteise alla ritta ->
 
-
-
         //VIIDE!! listview oma: https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
 
-        ObservableList names = FXCollections.observableArrayList();
-        ObservableList data = FXCollections.observableArrayList();
-        listView2 = new ListView(data);
-        listView2.setPrefSize(100, 150);
-        listView2.setEditable(true);
-
-        names.addAll(
-                "15 minutit", "1 tund", "4 tundi");
-
-        for (int i = 0; i < 1; i++) {
-            data.add("Vali aeg");
-        }
-
-        listView2.setItems(data);
-        listView2.setCellFactory(ComboBoxListCell.forListView(names));
-        StackPane root = new StackPane();
-        root.getChildren().add(listView2);
+        listView2 = new ListView<String>();
+        items =FXCollections.observableArrayList("1 minutit", "10 minutit", "30 minutit", "2 tundi");
+        listView2.setItems(items);
         grid.add(listView2, 2, 1);
-
-        // todo hbox (label + text fld), scrollpane - in a vbox
 
         VBox vbox = new VBox();
         vbox.setSpacing(10);
         vbox.getChildren().addAll(hbox);
-        grid.add(vbox, 2, 0); // col = 2, row = 1
-
+        grid.add(vbox, 2, 0);
 
         // Lisame nupud uus, kustuta ja salvesta.
-
         Button newbtn = new Button("Uus");
         newbtn.setOnAction(new NewButtonListener());
         Button delbtn = new Button("Kustuta");
@@ -122,16 +89,13 @@ public class Main
         anchor.getChildren().add(savebtn);
         grid.add(anchor, 2, 2);
 
-        // scene
-
-        Scene scene = new Scene(grid, 1000, 500); // width = 750, height = 400
+        // Scene'ga teeme põhiakna
+        Scene scene = new Scene(grid, 1000, 500); // laius 1000 kõrgus 500
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // initial selection
-        listView.getSelectionModel().selectFirst(); // does nothing if no data
-
-    } // start()
+        listView.getSelectionModel().selectFirst(); // valib automaatselt listist esimese, kui seal on todosid
+    }
 
     private class ListSelectChangeListener implements ChangeListener<Number> {
 
@@ -140,28 +104,13 @@ public class Main
                             Number old_val, Number new_val) {
 
             if ((new_val.intValue() < 0) || (new_val.intValue() >= data.size())) {
-
                 return; // invalid data
             }
 
-            // set name and desc fields for the selected todo
             Todo todo = data.get(new_val.intValue());
-            nametxt.setText(todo.getName());
-            //desctxt.setText(Integer.toString(todo.getReminder()));
-
+            nametxt.setText(todo.getName()); // lisab Todole nime
+            listView2.getSelectionModel().select(todo.getReminder());
         }
-    }
-
-    private ObservableList<Todo> getListData() {
-
-        List<Todo> list = new ArrayList<>(); // initial list data
-        list.add(new Todo("ToDo 1", 1));
-        list.add(new Todo("ToDo 2", 2));
-        list.add(new Todo("ToDo 3", 3));
-        list.add(new Todo("ToDo 4", 4));
-        ObservableList<Todo> data = FXCollections.observableList(list);
-
-        return data;
     }
 
     private class NewButtonListener implements EventHandler<ActionEvent> {
@@ -169,16 +118,17 @@ public class Main
         @Override
         public void handle(ActionEvent e) {
 
+            Todo todo = new Todo("Uus ToDo", 0); //lisab uue ülesande esimesele reale
 
+            ReminderTask todoTask = new ReminderTask(todo.getReminder(), todo.getName());
+            todo.setTask(todoTask);
 
-            // creates a todo at first row with name NEW todo and selects it
-            Todo todo = new Todo("NEW Todo", 0); // 0 = dummy id
             int ix = 0;
             data.add(ix, todo);
             listView.getSelectionModel().clearAndSelect(ix);
             nametxt.clear();
-            //VALE  listView2.getSelectionModel().clearAndSelect(ix); //desctxt.clear();
-            nametxt.setText("NEW Todo");
+            listView2.getSelectionModel().clearSelection();
+            nametxt.setText("Uus ToDo");
             nametxt.requestFocus();
         }
     }
@@ -190,22 +140,26 @@ public class Main
 
             int ix = listView.getSelectionModel().getSelectedIndex();
 
-            if (ix < 0) { // no data selected or no data
-
+            if (ix < 0) { // Pole midagi valitud või sisestud
                 return;
             }
 
             String s1 = nametxt.getText();
-            //String s2 = desctxt.getText();
-
-            // check if name is unique
 
             Todo todo = data.get(ix);
             todo.setName(s1);
-            // todo.setReminder(Integer.parseInt(s2));
 
-            // update list view with todo name, and select it
-            data.set(ix, null); // required for refresh
+            int reminderIx = listView2.getSelectionModel().getSelectedIndex();
+            todo.setReminder(reminderIx);
+
+            ReminderTask todoTask = todo.getTask();
+            todoTask.cancel();
+
+            todoTask = new ReminderTask(todo.getReminder(), todo.getName());
+            todo.setTask(todoTask);
+
+            // uuenda vaadet todonimega ja tee see aktiivseks
+            data.set(ix, null);
             data.set(ix, todo);
             listView.getSelectionModel().clearAndSelect(ix);
             listView.requestFocus();
@@ -223,17 +177,12 @@ public class Main
             // set next todo item after delete
             if (data.size() == 0) {
                 nametxt.clear();
-                //desctxt.clear();
                 return; // no selection
             }
-            ix = ix - 1;
-            if (ix < 0) {
-                ix = 0;
-            }
+
             listView.getSelectionModel().clearAndSelect(ix);
             Todo itemSelected = data.get(ix); // selected ix data (not set by list listener); // requires this is set
             nametxt.setText(itemSelected.getName());
-            //desctxt.setText(itemSelected.getDesc());
             listView.requestFocus();
         }
     }
