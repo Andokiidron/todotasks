@@ -4,7 +4,7 @@ public class Todo {
     private int reminder;
     private ReminderTask timerTask;
 
-    public Todo (String s1, int reminder) {
+    public Todo(String s1, int reminder) {
         name = s1;
         this.reminder = reminder;
     }

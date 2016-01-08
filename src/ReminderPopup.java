@@ -1,51 +1,40 @@
-import javafx.application.Application;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBoxBuilder;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ReminderPopup {
 
-    private String task;
-
     public ReminderPopup(String task) {
         Platform.setImplicitExit(false);
-        this.task = task;
 
-        Platform.runLater(new Runnable(){
+        Platform.runLater(new Runnable() { // new thread to run the program
 
             @Override
             public void run() {
                 final Stage popUpWindow = new Stage();
                 popUpWindow.initModality(Modality.WINDOW_MODAL);
-                Button okButton = new Button("Sulge");
-                okButton.setOnAction(new EventHandler<ActionEvent>(){
 
-                    @Override
-                    public void handle(ActionEvent arg0) {
-                        popUpWindow.close();
-                    }
-                });
+                VBox vbox = new VBox();
+                vbox.setSpacing(100);
+                vbox.setAlignment(Pos.CENTER);
+                vbox.getChildren().addAll(new Text(task));
 
-                Scene myDialogScene = new Scene(VBoxBuilder.create()
-                        .children(new Text(task), okButton)
-                        .alignment(Pos.CENTER)
-                        .padding(new Insets(10))
-                        .build());
+                Scene myDialogScene = new Scene(vbox);
+                popUpWindow.setResizable(true);
 
                 popUpWindow.setScene(myDialogScene);
                 popUpWindow.show();
+
+                // Close popup window automatically : http://stackoverflow.com/questions/27334455/how-to-close-a-stage-after-a-certain-amount-of-time-javafx
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(event -> popUpWindow.close());
+                delay.play();
             }
         });
     }

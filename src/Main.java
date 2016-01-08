@@ -11,25 +11,26 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
 import java.util.ArrayList;
 
-// VIIDE!! kogu põhja algne viide: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
+// REF:!! The hole GUI base http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
 
 public class Main
         extends Application {
 
     private ListView<Todo> listView;
-    private ObservableList<Todo> data;
+    private ObservableList<Todo> toDoList;
     private TextField nametxt;
     private ListView<String> listView2;
     private ObservableList<String> items;
 
-    public static void main(String [] args) {
+    public static void main(String[] args) {
         Application.launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) {   //Teen põhiakna
+    public void start(Stage primaryStage) {   //the main stage
         primaryStage.setTitle("Todo App");
 
         // gridPane layout
@@ -39,12 +40,12 @@ public class Main
         grid.setVgap(20); //vertikaalsete veerguda vahel olev vahe
         grid.setPadding(new Insets(25, 25, 25, 25)); //ümber gridi olev ruumi vahe
 
-        // list view, listener and list data
-        listView = new ListView<>();     //teen uue listview
+        //making list view to get todos into a list.
+        listView = new ListView<>();
         listView.getSelectionModel().selectedIndexProperty().addListener(
-                new ListSelectChangeListener());      //panen listeneri, et salvestada/säilitada valitud variant VIIDE: http://stackoverflow.com/questions/13264017/getting-selected-element-from-listview
-        data = FXCollections.observableList(new ArrayList<>());
-        listView.setItems(data);
+                new ListSelectChangeListener());      //making new listener to save selection VIIDE: http://stackoverflow.com/questions/13264017/getting-selected-element-from-listview
+        toDoList = FXCollections.observableList(new ArrayList<>());
+        listView.setItems(toDoList);
         grid.add(listView, 1, 1); // paigutan listview endal olevasse grid aknasse 1 ritta 1 veergu
 
         // todo name label       //alanupud vertikaalselt ja horisonaalselt
@@ -59,12 +60,10 @@ public class Main
         hbox.setSpacing(10);
         hbox.getChildren().addAll(namelbl, nametxt);
 
-        // Sellega saaks variandid panna üksteise alla ritta ->
-
-        //VIIDE!! listview oma: https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
+        //REF: how to make a listview : https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
 
         listView2 = new ListView<String>();
-        items =FXCollections.observableArrayList("1 minutit", "10 minutit", "30 minutit", "2 tundi");
+        items = FXCollections.observableArrayList("1 minutit", "10 minutit", "30 minutit", "2 tundi");
         listView2.setItems(items);
         grid.add(listView2, 2, 1);
 
@@ -73,7 +72,7 @@ public class Main
         vbox.getChildren().addAll(hbox);
         grid.add(vbox, 2, 0);
 
-        // Lisame nupud uus, kustuta ja salvesta.
+        // add necessary buttons.
         Button newbtn = new Button("Uus");
         newbtn.setOnAction(new NewButtonListener());
         Button delbtn = new Button("Kustuta");
@@ -89,7 +88,7 @@ public class Main
         anchor.getChildren().add(savebtn);
         grid.add(anchor, 2, 2);
 
-        // Scene'ga teeme põhiakna
+        // Making the main window
         Scene scene = new Scene(grid, 1000, 500); // laius 1000 kõrgus 500
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -103,11 +102,11 @@ public class Main
         public void changed(ObservableValue<? extends Number> ov,
                             Number old_val, Number new_val) {
 
-            if ((new_val.intValue() < 0) || (new_val.intValue() >= data.size())) {
+            if ((new_val.intValue() < 0) || (new_val.intValue() >= toDoList.size())) {
                 return; // invalid data
             }
 
-            Todo todo = data.get(new_val.intValue());
+            Todo todo = toDoList.get(new_val.intValue());
             nametxt.setText(todo.getName()); // lisab Todole nime
             listView2.getSelectionModel().select(todo.getReminder());
         }
@@ -124,7 +123,7 @@ public class Main
             todo.setTask(todoTask);
 
             int ix = 0;
-            data.add(ix, todo);
+            toDoList.add(ix, todo);
             listView.getSelectionModel().clearAndSelect(ix);
             nametxt.clear();
             listView2.getSelectionModel().clearSelection();
@@ -140,13 +139,13 @@ public class Main
 
             int ix = listView.getSelectionModel().getSelectedIndex();
 
-            if (ix < 0) { // Pole midagi valitud või sisestud
+            if (ix < 0) { // if nothing is selected the ix is smaller than 0
                 return;
             }
 
             String s1 = nametxt.getText();
 
-            Todo todo = data.get(ix);
+            Todo todo = toDoList.get(ix);
             todo.setName(s1);
 
             int reminderIx = listView2.getSelectionModel().getSelectedIndex();
@@ -159,29 +158,32 @@ public class Main
             todo.setTask(todoTask);
 
             // uuenda vaadet todonimega ja tee see aktiivseks
-            data.set(ix, null);
-            data.set(ix, todo);
+            toDoList.set(ix, null);
+            toDoList.set(ix, todo);
             listView.getSelectionModel().clearAndSelect(ix);
             listView.requestFocus();
         }
     }
+
     private class DeleteButtonListener implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent ae) {
             int ix = listView.getSelectionModel().getSelectedIndex();
-            if (ix < 0) { // no data or none selected
+            if (ix < 0) {
                 return;
             }
-            Todo todo = data.remove(ix);
+            Todo todo = toDoList.get(ix);
+            todo.getTask().cancel();
+            toDoList.remove(ix);
 
             // set next todo item after delete
-            if (data.size() == 0) {
+            if (toDoList.size() == 0) {
                 nametxt.clear();
                 return; // no selection
             }
 
             listView.getSelectionModel().clearAndSelect(ix);
-            Todo itemSelected = data.get(ix); // selected ix data (not set by list listener); // requires this is set
+            Todo itemSelected = toDoList.get(ix); // selected ix data (not set by list listener); // requires this is set
             nametxt.setText(itemSelected.getName());
             listView.requestFocus();
         }

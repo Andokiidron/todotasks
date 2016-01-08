@@ -21,12 +21,17 @@ public class ReminderTask extends TimerTask {
     }
 
     public int getTime(int ix) {
-        switch(ix) {
-            case 0: return 10 * 1000;
-            case 1: return 10 * 60 * 1000;
-            case 2: return 30 * 60 * 1000;
-            case 3: return 120 * 60 * 1000;
-            default: return -1;
+        switch (ix) {
+            case 0:
+                return 10 * 1000;
+            case 1:
+                return 10 * 60 * 1000;
+            case 2:
+                return 30 * 60 * 1000;
+            case 3:
+                return 120 * 60 * 1000;
+            default:
+                return -1;
         }
     }
 }
