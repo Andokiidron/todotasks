@@ -10,9 +10,7 @@ public class ReminderTask extends TimerTask {
 
         Timer timer = new Timer(true);
         int time = getTime(ix);
-        if (time != -1) {
-            timer.scheduleAtFixedRate(this, time, time);
-        }
+        timer.scheduleAtFixedRate(this, time, time);
     }
 
     @Override
