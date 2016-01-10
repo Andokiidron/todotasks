@@ -1,6 +1,4 @@
-// REF:!! The hole GUI base http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
-
-public class Todo {
+public class Todo {                                     // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
 
     private String name;
     private int reminder;
@@ -36,7 +34,7 @@ public class Todo {
     }
 
     @Override
-    public String toString() { //lets give the todo name to listview on the left
+    public String toString() {
         return name;
     }
 }

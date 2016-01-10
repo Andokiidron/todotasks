@@ -18,14 +18,14 @@ public class ReminderPopup {
             @Override
             public void run() {
                 final Stage popUpWindow = new Stage();
-                popUpWindow.initModality(Modality.WINDOW_MODAL);    // Defines a modal window that block events from being delivered to its entire owner window hierarchy. REF: https://docs.oracle.com/javafx/2/api/javafx/stage/Modality.html
+                popUpWindow.initModality(Modality.WINDOW_MODAL);        // Defines a modal window that block events from being delivered to its entire owner window hierarchy. REF: https://docs.oracle.com/javafx/2/api/javafx/stage/Modality.html
                 popUpWindow.setMinHeight(100);
                 popUpWindow.setMinWidth(200);
                 popUpWindow.setResizable(true);
 
                 VBox vbox = new VBox();
                 vbox.setAlignment(Pos.CENTER);
-                vbox.setStyle("-fx-background-color: #cd5c5c; "); // set the color of the popupwindow background REF: http://stackoverflow.com/questions/22614758/issue-with-background-color-in-javafx-8
+                vbox.setStyle("-fx-background-color: #cd5c5c; ");       // set the color of the popupwindow background REF: http://stackoverflow.com/questions/22614758/issue-with-background-color-in-javafx-8
                 vbox.getChildren().addAll(new Text(task));
 
                 Scene myDialogScene = new Scene(vbox);

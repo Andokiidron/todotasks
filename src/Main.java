@@ -13,10 +13,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 
-// REF:!! The hole GUI base http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
-
 public class Main
-        extends Application {
+        extends Application {          // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
 
     private ListView<Todo> listView;
     private ObservableList<Todo> toDoList;
@@ -32,22 +30,19 @@ public class Main
     public void start(Stage primaryStage) {   //the main stage
         primaryStage.setTitle("Todo App");
 
-        // gridPane layout
-        GridPane grid = new GridPane();     //making a grid to put everything correctly to the main stage
+        GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
-        grid.setHgap(15);                               // space between horisontal gridlines
-        grid.setVgap(20);                               // space between vertical gridlines
-        grid.setPadding(new Insets(25, 25, 25, 25));    //ümber gridi olev ruumi vahe
+        grid.setHgap(15);
+        grid.setVgap(20);
+        grid.setPadding(new Insets(25, 25, 25, 25));
 
-        listView = new ListView<>();                    //making list view to get todos into a list.
+        listView = new ListView<>();                    // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
         listView.getSelectionModel().selectedIndexProperty().addListener(
                 new ListSelectChangeListener());        //making new listener to save selection REF: http://stackoverflow.com/questions/13264017/getting-selected-element-from-listview
         toDoList = FXCollections.observableList(new ArrayList<>());
         listView.setItems(toDoList);
         listView.getSelectionModel().selectFirst();     // selects first from the list
-        grid.add(listView, 1, 1);                       // Lets give a position to listview in a grid
-
-        // todo name label       //alanupud vertikaalselt ja horisonaalselt
+        grid.add(listView, 1, 1);
 
         Label namelbl = new Label("Todo nimi:");
         nametxt = new TextField();
@@ -60,7 +55,7 @@ public class Main
         hbox.getChildren().addAll(namelbl, nametxt);
 
         listView2 = new ListView<String>();              //REF: how to make a listview : https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
-        items = FXCollections.observableArrayList("1 minutit", "10 minutit", "30 minutit", "2 tundi");
+        items = FXCollections.observableArrayList("30 sekundit", "1 päev", "1 nädal", "2 nädalat");
         listView2.setItems(items);
         grid.add(listView2, 2, 1);
 
@@ -69,7 +64,7 @@ public class Main
         vbox.getChildren().addAll(hbox);
         grid.add(vbox, 2, 0);
 
-        Button newbtn = new Button("Uus");
+        Button newbtn = new Button("Uus");                      // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
         newbtn.setOnAction(new NewButtonListener());
         Button delbtn = new Button("Kustuta");
         delbtn.setOnAction(new DeleteButtonListener());
@@ -84,7 +79,7 @@ public class Main
         anchor.getChildren().add(savebtn);
         grid.add(anchor, 2, 2);
 
-        Scene scene = new Scene(grid, 1000, 500);               // Making the main window
+        Scene scene = new Scene(grid, 1000, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -100,7 +95,7 @@ public class Main
             }
 
             Todo todo = toDoList.get(new_val.intValue());
-            nametxt.setText(todo.getName());                     // set the name for the todo
+            nametxt.setText(todo.getName());
             listView2.getSelectionModel().select(todo.getReminder());
         }
     }
@@ -108,9 +103,9 @@ public class Main
     private class NewButtonListener implements EventHandler<ActionEvent> {
 
         @Override
-        public void handle(ActionEvent e) {
+        public void handle(ActionEvent e) {                         // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
 
-            Todo todo = new Todo("Uus ToDo", 0);                 //new todo to the first line
+            Todo todo = new Todo("Uus ToDo", 0);
 
             ReminderTask todoTask = new ReminderTask(todo.getReminder(), todo.getName());
             todo.setTask(todoTask);
@@ -131,8 +126,7 @@ public class Main
         public void handle(ActionEvent ae) {
 
             int ix = listView.getSelectionModel().getSelectedIndex();
-
-            if (ix < 0) {                                       // if nothing is selected the ix is smaller than 0
+            if (ix < 0) {
                 return;
             }
 
@@ -150,7 +144,7 @@ public class Main
             todoTask = new ReminderTask(todo.getReminder(), todo.getName());
             todo.setTask(todoTask);
 
-            toDoList.set(ix, null);                             // set new name for the todo and the selection
+            toDoList.set(ix, null);
             toDoList.set(ix, todo);
             listView.getSelectionModel().clearAndSelect(ix);
             listView.requestFocus();
@@ -168,14 +162,13 @@ public class Main
             todo.getTask().cancel();
             toDoList.remove(ix);
 
-            // set next todo item after delete
             if (toDoList.size() == 0) {
                 nametxt.clear();
                 return;
             }
 
             listView.getSelectionModel().clearAndSelect(ix);
-            Todo itemSelected = toDoList.get(ix);                    // selected ix data (not set by list listener); // requires this is set
+            Todo itemSelected = toDoList.get(ix);                    // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
             nametxt.setText(itemSelected.getName());
             listView.requestFocus();
         }
