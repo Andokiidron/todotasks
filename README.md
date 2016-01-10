@@ -2,7 +2,7 @@
 
 "To-do kalender", aitamaks pidevalt kasutajal meeles hoida tähtsaid tööülesandeid
 
-To-do kalenderisse saab inimene järjest lisada ülesandeid ning liigitada neid eeskätt olulisuse ehk meeldetuletustsükli järgi. #todotasks eesmärgiks on kasutajale ülesandeid silmnähtavalt meelde tuletada, segamata tema hetke tööd. Selleks avaneb programmis aknake, mis annab märku ToDo-st vastava ajatsükli järel. Ülesande kastikest näidatakse 3 sekundit ning seejärel kastike kaob. Kasutaja saab igal hetkel konsoolist muuta ülesande nime ja tema meeldetuletustsüklit. Programm kuvab erineva olulisusega ülesandeid kasutajale, tagamaks nende meelespüsimise. Ülesanded saab jagada meeldetuletuletustsüklite kaupa (Näiteks: iga kahe tunni tagant, iga 4 tunni tagant, 1 kord päevas, 2 korda nädalas). Ülesande täitmise korral saaab kasutaja ToDo programmist ära kustutada.
+To-do kalenderisse saab inimene järjest lisada ülesandeid ning liigitada neid eeskätt olulisuse ehk meeldetuletustsükli järgi. #todotasks eesmärgiks on kasutajale ülesandeid silmnähtavalt meelde tuletada, segamata tema hetke tööd. Selleks avaneb programmis aknake, mis annab märku ToDo-st vastava ajatsükli järel. Ülesande kastikest näidatakse 3 sekundit ning seejärel kastike kaob. Kasutaja saab igal hetkel konsoolist muuta ülesande nime ja tema meeldetuletustsüklit. Programm kuvab erineva olulisusega ülesandeid kasutajale, tagamaks nende meelespüsimise. Ülesanded saab jagada meeldetuletuletustsüklite kaupa (Näiteks: iga 30 sekundi tagant, 1 päev tagant, 1 nädala tagant, 2 nädala tagant). Ülesande täitmise korral saaab kasutaja ToDo programmist ära kustutada.
 
 Kasutusjuhend:
 Sinu kasutada on ToDo Kalender, aitamaks sul meelespidada olulisi ülesandeid. Selleks:
