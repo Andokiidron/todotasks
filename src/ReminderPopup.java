@@ -13,12 +13,12 @@ public class ReminderPopup {
     public ReminderPopup(String task) {
         Platform.setImplicitExit(false);
 
-        Platform.runLater(new Runnable() {                        // new thread to run the program. Run the specified Runnable on the JavaFX Application Thread at some unspecified time in the future. REF: https://docs.oracle.com/javafx/2/api/javafx/application/Platform.html
+        Platform.runLater(new Runnable() {                        // new thread to run the program. Run the specified Runnable on the JavaFX Application Thread at some unspecified time in the future. REF: https://docs.oracle.com/javafx/2/api/javafx/application/Platform.html & REF: http://stackoverflow.com/questions/13784333/platform-runlater-and-task-javafx
 
             @Override
             public void run() {
                 final Stage popUpWindow = new Stage();
-                popUpWindow.initModality(Modality.WINDOW_MODAL);        // Defines a modal window that block events from being delivered to its entire owner window hierarchy. REF: https://docs.oracle.com/javafx/2/api/javafx/stage/Modality.html
+                popUpWindow.initModality(Modality.WINDOW_MODAL);        // REF: http://www.javafxtutorials.com/tutorials/creating-a-pop-up-window-in-javafx/ . Oracle: Defines a modal window that block events from being delivered to its entire owner window hierarchy. REF: https://docs.oracle.com/javafx/2/api/javafx/stage/Modality.html
                 popUpWindow.setMinHeight(100);
                 popUpWindow.setMinWidth(200);
                 popUpWindow.setResizable(true);
@@ -29,7 +29,6 @@ public class ReminderPopup {
                 vbox.getChildren().addAll(new Text(task));
 
                 Scene myDialogScene = new Scene(vbox);
-
                 popUpWindow.setScene(myDialogScene);
                 popUpWindow.show();
 

@@ -13,11 +13,6 @@ public class ReminderTask extends TimerTask {
         timer.scheduleAtFixedRate(this, time, time);
     }
 
-    @Override
-    public void run() {
-        new ReminderPopup(name);
-    }
-
     public int getTime(int ix) {
         switch (ix) {
             case 0:
@@ -31,5 +26,10 @@ public class ReminderTask extends TimerTask {
             default:
                 return -1;
         }
+    }
+
+    @Override
+    public void run() {
+        new ReminderPopup(name);
     }
 }

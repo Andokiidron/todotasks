@@ -16,11 +16,11 @@ import java.util.ArrayList;
 public class Main
         extends Application {          // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
 
-    private ListView<Todo> listView;
+    private ListView<Todo> listViewToDo;
     private ObservableList<Todo> toDoList;
-    private TextField nametxt;
-    private ListView<String> listView2;
-    private ObservableList<String> items;
+    private TextField nameText;
+    private ListView<String> listViewReminder;
+    private ObservableList<String> reminderTimes;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -36,35 +36,35 @@ public class Main
         grid.setVgap(20);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        listView = new ListView<>();                    // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
-        listView.getSelectionModel().selectedIndexProperty().addListener(
+        listViewToDo = new ListView<>();                    // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
+        listViewToDo.getSelectionModel().selectedIndexProperty().addListener(
                 new ListSelectChangeListener());        //making new listener to save selection REF: http://stackoverflow.com/questions/13264017/getting-selected-element-from-listview
         toDoList = FXCollections.observableList(new ArrayList<>());
-        listView.setItems(toDoList);
-        listView.getSelectionModel().selectFirst();     // selects first from the list
-        grid.add(listView, 1, 1);
+        listViewToDo.setItems(toDoList);
+        listViewToDo.getSelectionModel().selectFirst();     // selects first from the list
+        grid.add(listViewToDo, 1, 1);
 
         Label namelbl = new Label("Todo nimi:");
-        nametxt = new TextField();
-        nametxt.setMinHeight(30.0);
-        nametxt.setPromptText("Lisa ToDo (kohustuslik väli).");
-        nametxt.setPrefColumnCount(20);
-        nametxt.setTooltip(new Tooltip("Todo nimi (5 kuni 50 tähmärki)"));
+        nameText = new TextField();
+        nameText.setMinHeight(30.0);
+        nameText.setPromptText("Lisa ToDo (kohustuslik väli).");
+        nameText.setPrefColumnCount(20);
+        nameText.setTooltip(new Tooltip("Todo nimi (5 kuni 50 tähmärki)"));
         HBox hbox = new HBox();
         hbox.setSpacing(10);
-        hbox.getChildren().addAll(namelbl, nametxt);
+        hbox.getChildren().addAll(namelbl, nameText);
 
-        listView2 = new ListView<String>();              //REF: how to make a listview : https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
-        items = FXCollections.observableArrayList("30 sekundit", "1 päev", "1 nädal", "2 nädalat");
-        listView2.setItems(items);
-        grid.add(listView2, 2, 1);
+        listViewReminder = new ListView<String>();              //REF: how to make a listview : https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
+        reminderTimes = FXCollections.observableArrayList("30 sekundit", "1 päev", "1 nädal", "2 nädalat");
+        listViewReminder.setItems(reminderTimes);
+        grid.add(listViewReminder, 2, 1);
 
         VBox vbox = new VBox();
         vbox.setSpacing(10);
         vbox.getChildren().addAll(hbox);
         grid.add(vbox, 2, 0);
 
-        Button newbtn = new Button("Uus");                      // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
+        Button newbtn = new Button("Uus");
         newbtn.setOnAction(new NewButtonListener());
         Button delbtn = new Button("Kustuta");
         delbtn.setOnAction(new DeleteButtonListener());
@@ -74,10 +74,10 @@ public class Main
 
         Button savebtn = new Button("Salvesta");
         savebtn.setOnAction(new SaveButtonListener());
-        AnchorPane anchor = new AnchorPane();
+        AnchorPane saveBtnAnchor = new AnchorPane();
         AnchorPane.setRightAnchor(savebtn, 0.0);
-        anchor.getChildren().add(savebtn);
-        grid.add(anchor, 2, 2);
+        saveBtnAnchor.getChildren().add(savebtn);
+        grid.add(saveBtnAnchor, 2, 2);
 
         Scene scene = new Scene(grid, 1000, 500);
         primaryStage.setScene(scene);
@@ -95,15 +95,15 @@ public class Main
             }
 
             Todo todo = toDoList.get(new_val.intValue());
-            nametxt.setText(todo.getName());
-            listView2.getSelectionModel().select(todo.getReminder());
+            nameText.setText(todo.getName());
+            listViewReminder.getSelectionModel().select(todo.getReminder());
         }
     }
 
-    private class NewButtonListener implements EventHandler<ActionEvent> {
+    private class NewButtonListener implements EventHandler<ActionEvent> {                  // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
 
         @Override
-        public void handle(ActionEvent e) {                         // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
+        public void handle(ActionEvent e) {
 
             Todo todo = new Todo("Uus ToDo", 0);
 
@@ -112,30 +112,30 @@ public class Main
 
             int ix = 0;
             toDoList.add(ix, todo);
-            listView.getSelectionModel().clearAndSelect(ix);
-            nametxt.clear();
-            listView2.getSelectionModel().clearSelection();
-            nametxt.setText("Uus ToDo");
-            nametxt.requestFocus();
+            listViewToDo.getSelectionModel().clearAndSelect(ix);
+            nameText.clear();
+            listViewReminder.getSelectionModel().clearSelection();
+            nameText.setText("Uus ToDo");
+            nameText.requestFocus();
         }
     }
 
-    private class SaveButtonListener implements EventHandler<ActionEvent> {
+    private class SaveButtonListener implements EventHandler<ActionEvent> {             // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
 
         @Override
         public void handle(ActionEvent ae) {
 
-            int ix = listView.getSelectionModel().getSelectedIndex();
+            int ix = listViewToDo.getSelectionModel().getSelectedIndex();
             if (ix < 0) {
                 return;
             }
 
-            String s1 = nametxt.getText();
+            String s1 = nameText.getText();
 
             Todo todo = toDoList.get(ix);
             todo.setName(s1);
 
-            int reminderIx = listView2.getSelectionModel().getSelectedIndex();
+            int reminderIx = listViewReminder.getSelectionModel().getSelectedIndex();
             todo.setReminder(reminderIx);
 
             ReminderTask todoTask = todo.getTask();
@@ -146,15 +146,15 @@ public class Main
 
             toDoList.set(ix, null);
             toDoList.set(ix, todo);
-            listView.getSelectionModel().clearAndSelect(ix);
-            listView.requestFocus();
+            listViewToDo.getSelectionModel().clearAndSelect(ix);
+            listViewToDo.requestFocus();
         }
     }
 
     private class DeleteButtonListener implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent ae) {
-            int ix = listView.getSelectionModel().getSelectedIndex();
+            int ix = listViewToDo.getSelectionModel().getSelectedIndex();
             if (ix < 0) {
                 return;
             }
@@ -163,14 +163,14 @@ public class Main
             toDoList.remove(ix);
 
             if (toDoList.size() == 0) {
-                nametxt.clear();
+                nameText.clear();
                 return;
             }
 
-            listView.getSelectionModel().clearAndSelect(ix);
+            listViewToDo.getSelectionModel().clearAndSelect(ix);
             Todo itemSelected = toDoList.get(ix);                    // REF: http://www.javacodegeeks.com/2015/01/javafx-list-example.html#Build the GUI
-            nametxt.setText(itemSelected.getName());
-            listView.requestFocus();
+            nameText.setText(itemSelected.getName());
+            listViewToDo.requestFocus();
         }
     }
 }
